@@ -1,6 +1,6 @@
 # Silakka54 RUEN port 
 
-## Прошивка для клавиатуры Silakka54 с поддержкой не символов которые от раскладки символов  
+## Прошивка для клавиатуры Silakka54 с поддержкой символов которые от раскладки символов  
 
 Основано на: **https://github.com/ergohaven/vial-qmk/blob/ergohaven/keyboards/ergohaven/docs/ruen.md#ruen-m0**
 
