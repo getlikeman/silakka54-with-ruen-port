@@ -29,10 +29,9 @@
  * friendly names in the GUI.
  */
 enum custom_keycodes {
-    RUEN_TOGGLE = SAFE_RANGE,
+    RUEN_TOGGLE = QK_KB_0,
     RUEN_EN,
     RUEN_RU,
-    /* Punctuation available on both layouts – no layout switching */
     RUEN_DOT,
     RUEN_COMMA,
     RUEN_SCLN,
@@ -40,7 +39,6 @@ enum custom_keycodes {
     RUEN_DQUOTE,
     RUEN_QST,
     RUEN_SLASH,
-    /* Symbols only on the US layout – temporarily switch from RU */
     RUEN_LBRC,
     RUEN_RBRC,
     RUEN_LCBR,
@@ -55,9 +53,7 @@ enum custom_keycodes {
     RUEN_CARET,
     RUEN_AMP,
     RUEN_PIPE,
-    /* Russian‑only symbol */
     RUEN_NUM,
-    /* Layout management helpers */
     RUEN_SYNC,
     RUEN_MOD,
     RUEN_WORD,
@@ -76,10 +72,10 @@ static bool ruen_is_russian = false;
 
 /* Stored state for RUEN_STORE/RUEN_REVERT */
 static bool ruen_saved_state = false;
+static bool ruen_mod_restore_state = false;
+static uint16_t ruen_mod_timer = 0;
 
-/* Flag for RuEn word mode – when enabled the keyboard stays in English
- * until a delimiter (space, enter, minus or escape) is pressed.  At
- * that point the layout is returned to Russian and the flag cleared. */
+
 static bool ruen_word_active = false;
 
 /* Send the OS‑level layout switch.  Most operating systems toggle
@@ -87,70 +83,77 @@ static bool ruen_word_active = false;
  * different shortcut you can modify the tap_code16() call here
  * accordingly. */
 static void ruen_send_layout_switch(void) {
-    tap_code16(LGUI(KC_SPACE));
+    uint8_t mods = get_mods();
+
+    if (mods != 0) {
+        del_mods(mods);
+    }
+
+    if (keymap_config.swap_lctl_lgui) {
+        register_code(KC_LCTL);
+        tap_code(KC_SPACE);
+        wait_ms(50);
+        unregister_code(KC_LCTL);
+        wait_ms(50);
+    } else {
+        register_code(KC_LGUI);
+        tap_code(KC_SPACE);
+        wait_ms(50);
+        unregister_code(KC_LGUI);
+        wait_ms(50);
+    }
+
+    if (mods != 0) {
+        add_mods(mods);
+    }
+}
+
+static void ruen_set_layout(bool russian) {
+    if (ruen_is_russian == russian) {
+        return;
+    }
+
+    ruen_send_layout_switch();
+    ruen_is_russian = russian;
 }
 
 /* Toggle the internal and OS layout */
 static void ruen_toggle_layout(void) {
-    ruen_send_layout_switch();
-    ruen_is_russian = !ruen_is_russian;
+    ruen_set_layout(!ruen_is_russian);
 }
 
-/* Force English layout */
+/* Force English */
 static void ruen_set_en(void) {
-    if (ruen_is_russian) {
-        ruen_send_layout_switch();
-        ruen_is_russian = false;
-    }
+    ruen_set_layout(false);
 }
-
-/* Force Russian layout */
 static void ruen_set_ru(void) {
-    if (!ruen_is_russian) {
-        ruen_send_layout_switch();
-        ruen_is_russian = true;
-    }
+    ruen_set_layout(true);
 }
 
-/* Temporarily switch to the opposite layout, send the keycode and return
- * back.  If shift_required is true then the key will be sent with
- * Shift. */
-static void ruen_send_us_symbol(uint16_t kc, bool shift_required) {
-    if (ruen_is_russian) {
-        ruen_toggle_layout();
-        if (shift_required) {
-            tap_code16(LSFT(kc));
-        } else {
-            tap_code16(kc);
-        }
-        ruen_toggle_layout();
-    } else {
-        if (shift_required) {
-            tap_code16(LSFT(kc));
-        } else {
-            tap_code16(kc);
-        }
-    }
+/* Send a symbol that exists on both layouts but uses different
+ * keycodes in Russian and English. */
+static void ruen_send_layout_symbol(uint16_t en_keycode, uint16_t ru_keycode) {
+    tap_code16(ruen_is_russian ? ru_keycode : en_keycode);
+}
+
+/* Temporarily switch to the requested layout, send the symbol and then
+ * restore the previous layout. */
+static void ruen_send_temporary_symbol(bool russian_layout, uint16_t keycode) {
+    bool previous_layout = ruen_is_russian;
+
+    ruen_set_layout(russian_layout);
+    tap_code16(keycode);
+    ruen_set_layout(previous_layout);
+}
+
+static void ruen_send_us_symbol(uint16_t keycode) {
+    ruen_send_temporary_symbol(false, keycode);
 }
 
 /* Temporarily switch to Russian layout, send the keycode and return
  * back.  This is used for the «№» symbol. */
-static void ruen_send_ru_symbol(uint16_t kc, bool shift_required) {
-    if (!ruen_is_russian) {
-        ruen_toggle_layout();
-        if (shift_required) {
-            tap_code16(LSFT(kc));
-        } else {
-            tap_code16(kc);
-        }
-        ruen_toggle_layout();
-    } else {
-        if (shift_required) {
-            tap_code16(LSFT(kc));
-        } else {
-            tap_code16(kc);
-        }
-    }
+static void ruen_send_ru_symbol(uint16_t keycode) {
+    ruen_send_temporary_symbol(true, keycode);
 }
 
 /* Store the current RuEn state */
@@ -182,6 +185,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             case KC_MINS:
                 ruen_set_ru();
                 ruen_word_active = false;
+                caps_word_off();
                 break;
             default:
                 break;
@@ -200,84 +204,96 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 ruen_set_ru();
                 return false;
             case RUEN_DOT:
-                tap_code16(KC_DOT);
+                ruen_send_layout_symbol(KC_DOT, KC_SLSH);
                 return false;
             case RUEN_COMMA:
-                tap_code16(KC_COMM);
+                ruen_send_layout_symbol(KC_COMM, LSFT(KC_SLSH));
                 return false;
             case RUEN_SCLN:
-                tap_code16(KC_SCLN);
+                ruen_send_layout_symbol(KC_SCLN, LSFT(KC_4));
                 return false;
             case RUEN_COLON:
-                tap_code16(LSFT(KC_SCLN));
+                ruen_send_layout_symbol(LSFT(KC_SCLN), LSFT(KC_6));
                 return false;
             case RUEN_DQUOTE:
-                tap_code16(LSFT(KC_QUOT));
+                ruen_send_layout_symbol(LSFT(KC_QUOT), LSFT(KC_2));
                 return false;
             case RUEN_QST:
-                tap_code16(LSFT(KC_SLSH));
+                ruen_send_layout_symbol(LSFT(KC_SLSH), LSFT(KC_7));
                 return false;
             case RUEN_SLASH:
-                tap_code16(KC_SLSH);
+                ruen_send_layout_symbol(KC_SLSH, LSFT(KC_BSLS));
                 return false;
             case RUEN_LBRC:
-                ruen_send_us_symbol(KC_LBRC, false);
+                ruen_send_us_symbol(KC_LBRC);
                 return false;
             case RUEN_RBRC:
-                ruen_send_us_symbol(KC_RBRC, false);
+                ruen_send_us_symbol(KC_RBRC);
                 return false;
             case RUEN_LCBR:
-                ruen_send_us_symbol(KC_LBRC, true);
+                ruen_send_us_symbol(LSFT(KC_LBRC));
                 return false;
             case RUEN_RCBR:
-                ruen_send_us_symbol(KC_RBRC, true);
+                ruen_send_us_symbol(LSFT(KC_RBRC));
                 return false;
             case RUEN_LT:
-                ruen_send_us_symbol(KC_COMM, true);
+                ruen_send_us_symbol(LSFT(KC_COMM));
                 return false;
             case RUEN_GT:
-                ruen_send_us_symbol(KC_DOT, true);
+                ruen_send_us_symbol(LSFT(KC_DOT));
                 return false;
             case RUEN_GRAVE:
-                ruen_send_us_symbol(KC_GRV, false);
+                ruen_send_us_symbol(KC_GRV);
                 return false;
             case RUEN_TILDE:
-                ruen_send_us_symbol(KC_GRV, true);
+                ruen_send_us_symbol(LSFT(KC_GRV));
                 return false;
             case RUEN_AT:
-                ruen_send_us_symbol(KC_2, true);
+                ruen_send_us_symbol(LSFT(KC_2));
                 return false;
             case RUEN_HASH:
-                ruen_send_us_symbol(KC_3, true);
+                ruen_send_us_symbol(LSFT(KC_3));
                 return false;
             case RUEN_DOLLAR:
-                ruen_send_us_symbol(KC_4, true);
+                ruen_send_us_symbol(LSFT(KC_4));
                 return false;
             case RUEN_CARET:
-                ruen_send_us_symbol(KC_6, true);
+                ruen_send_us_symbol(LSFT(KC_6));
                 return false;
             case RUEN_AMP:
-                ruen_send_us_symbol(KC_7, true);
+                ruen_send_us_symbol(LSFT(KC_7));
                 return false;
             case RUEN_PIPE:
-                ruen_send_us_symbol(KC_BSLS, true);
+                ruen_send_us_symbol(LSFT(KC_BSLS));
                 return false;
             case RUEN_NUM:
-                /* The «№» symbol is shift+3 on the Russian layout */
-                ruen_send_ru_symbol(KC_3, true);
+                ruen_send_ru_symbol(LSFT(KC_3));
                 return false;
             case RUEN_SYNC:
-                /* Toggle internal state without sending anything to the OS */
                 ruen_is_russian = !ruen_is_russian;
                 return false;
             case RUEN_MOD:
-                /* While held, temporarily switch layout; revert on release */
                 ruen_toggle_layout();
+                ruen_mod_restore_state = !ruen_is_russian;
+                ruen_mod_timer = timer_read();
                 return false;
             case RUEN_WORD:
-                /* Start a RuEn word: switch to English and stay until delim */
-                ruen_set_en();
-                ruen_word_active = true;
+                if (ruen_is_russian && !ruen_word_active) {
+                    bool shift_active =
+                        (get_mods() | get_oneshot_mods() | get_weak_mods()) &
+                        MOD_MASK_SHIFT;
+
+                    if (get_oneshot_mods() & MOD_MASK_SHIFT) {
+                        clear_oneshot_mods();
+                    }
+
+                    ruen_set_en();
+                    ruen_word_active = true;
+
+                    if (shift_active) {
+                        caps_word_on();
+                    }
+                }
                 return false;
             case RUEN_STORE:
                 ruen_store();
@@ -292,7 +308,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         /* key release events */
         switch (keycode) {
             case RUEN_MOD:
-                ruen_toggle_layout();
+                if (timer_elapsed(ruen_mod_timer) >=
+                    get_tapping_term(keycode, record)) {
+                    ruen_set_layout(ruen_mod_restore_state);
+                }
                 return false;
             default:
                 break;
@@ -301,19 +320,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     return true;
 }
 
-/* Keymap layers.
- *
- * Layer 0 is the default typing layer.  The bottom row has been
- * modified to expose the RuEn functions:
- *  - RUEN_TOGGLE replaces the left GUI key (switches the current layout).
- *  - MO(1) still momentarily accesses layer 1.
- *  - KC_SPC and KC_ENT remain unchanged.
- *  - RUEN_EN and RUEN_RU replace the right control and right alt keys
- *    respectively.  Press them to force English or Russian layout.
- *
- * Additional RuEn symbols can be added to unused keys in any layer via
- * Vial.
- */
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT(
         KC_ESC,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,
@@ -445,10 +452,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     )
 };
 
-/* Chordal hold layout is retained from the original Vial keymap.  It is
- * used to determine which side of the split keyboard a key resides on
- * when applying chord-hold behaviour.  There is no need to modify this
- * for RuEn. */
 const char chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] PROGMEM =
     LAYOUT(
         'L', 'L', 'L', 'L', 'L', 'L',  'R', 'R', 'R', 'R', 'R', 'R',
