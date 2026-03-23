@@ -157,6 +157,7 @@ static void ruen_send_ru_symbol(uint16_t kc, bool shift_required) {
 static void ruen_store(void) {
     ruen_saved_state = ruen_is_russian;
 }
+
 /* Restore the stored RuEn state */
 static void ruen_revert(void) {
     if (ruen_is_russian != ruen_saved_state) {
@@ -444,7 +445,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     )
 };
 
-
+/* Chordal hold layout is retained from the original Vial keymap.  It is
+ * used to determine which side of the split keyboard a key resides on
+ * when applying chord-hold behaviour.  There is no need to modify this
+ * for RuEn. */
 const char chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] PROGMEM =
     LAYOUT(
         'L', 'L', 'L', 'L', 'L', 'L',  'R', 'R', 'R', 'R', 'R', 'R',
