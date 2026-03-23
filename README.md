@@ -1,13 +1,9 @@
+# Silakka54 RUEN port 
 
-# Silakka54
+## Прошивка для клавиатуры Silakka54 с поддержкой не символов которые от раскладки символов  
 
-Silakka54 is a RP2040 Zero based 54-key column staggered split keyboard. PCB uses hotswap sockets. Design is inspired from REVIUNG41 and Corne keyboards.
+Основано на: **https://github.com/ergohaven/vial-qmk/blob/ergohaven/keyboards/ergohaven/docs/ruen.md#ruen-m0**
 
-PCB is designed for MX style key switches. Current top plate only supports MX style switches. 5-pin switches are supported. I recommend using Vial firmware.
+Установка : **https://github.com/Squalius-cephalus/silakka54/wiki/Building-the-firmware**
 
-**For more information visit https://github.com/Squalius-cephalus/silakka54/wiki**
-
-![](https://raw.githubusercontent.com/Squalius-cephalus/silakka54/main/silakka54.png)
-
-PCB design uses footprints from [ScottoKeebs](https://github.com/joe-scotto/scottokeebs/tree/main/Extras/ScottoKicad "ScottoKeebs") and [kbd library.](https://github.com/foostan/kbd "kbd library.")
-
+Остальная информация: **https://github.com/squalius-cephalus/silakka54/wiki**
