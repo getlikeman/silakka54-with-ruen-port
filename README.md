@@ -2,7 +2,7 @@
 
 ## Прошивка для клавиатуры Silakka54 с поддержкой символов которые от не зависят раскладки символов  
 
-Основано на: **https://github.com/ergohaven/vial-qmk/blob/ergohaven/keyboards/ergohaven/docs/ruen.md** (рекомендуется к прочтению)
+Основано на: **https://github.com/ergohaven/vial-qmk/blob/ergohaven/keyboards/ergohaven/docs/ruen.md** (Руководство)
 
 Установка и прошивка: **https://github.com/Squalius-cephalus/silakka54/wiki/Building-the-firmware**
 
