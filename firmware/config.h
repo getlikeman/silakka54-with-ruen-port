@@ -15,7 +15,8 @@
  */
 
 #pragma once
-//uncomment if
+
+//uncomment if need boot from right side
 // #define MASTER_RIGHT
 
 #define SERIAL_USART_FULL_DUPLEX

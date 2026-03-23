@@ -29,6 +29,39 @@
         "pid": "0x1212",
         "vid": "0xFEED"
     },
+    "customKeycodes": [
+        {"name": "RuEn Toggle", "title": "Toggle RU/EN layout", "shortName": "_TOGGLE"},
+        {"name": "RuEn En", "title": "Switch to English layout", "shortName": "_EN"},
+        {"name": "RuEn Ru", "title": "Switch to Russian layout", "shortName": "_RU"},
+        {"name": "RuEn .", "title": "Period (.) symbol", "shortName": "_DOT"},
+        {"name": "RuEn ,", "title": "Comma (,)", "shortName": "_COMMA"},
+        {"name": "RuEn ;", "title": "Semicolon (;)", "shortName": "_SCLN"},
+        {"name": "RuEn :", "title": "Colon (:)", "shortName": "_COLON"},
+        {"name": "RuEn \"", "title": "Double quote (\")", "shortName": "_DQUOTE"},
+        {"name": "RuEn ?", "title": "Question mark (?)", "shortName": "_QST"},
+        {"name": "RuEn /", "title": "Forward slash (/)", "shortName": "_SLASH"},
+        {"name": "RuEn [", "title": "Left bracket ([)", "shortName": "_LBRC"},
+        {"name": "RuEn ]", "title": "Right bracket (])", "shortName": "_RBRC"},
+        {"name": "RuEn {", "title": "Left brace ({)", "shortName": "_LCBR"},
+        {"name": "RuEn }", "title": "Right brace (})", "shortName": "_RCBR"},
+        {"name": "RuEn <", "title": "Less-than (<)", "shortName": "_LT"},
+        {"name": "RuEn >", "title": "Greater-than (>)", "shortName": "_GT"},
+        {"name": "RuEn `", "title": "Backtick (`)", "shortName": "_GRAVE"},
+        {"name": "RuEn ~", "title": "Tilde (~)", "shortName": "_TILDE"},
+        {"name": "RuEn @", "title": "At sign (@)", "shortName": "_AT"},
+        {"name": "RuEn #", "title": "Hash (#)", "shortName": "_HASH"},
+        {"name": "RuEn $", "title": "Dollar ($)", "shortName": "_DOLLAR"},
+        {"name": "RuEn ^", "title": "Caret (^)", "shortName": "_CARET"},
+        {"name": "RuEn &", "title": "Ampersand (&)", "shortName": "_AMP"},
+        {"name": "RuEn |", "title": "Vertical bar (|)", "shortName": "_PIPE"},
+        {"name": "RuEn №", "title": "Numero (№)", "shortName": "_NUM"},
+        {"name": "RuEn Sync", "title": "Synchronise internal layout state", "shortName": "_SYNC"},
+        {"name": "RuEn Mod/Tg", "title": "Momentary layout toggle", "shortName": "_MOD"},
+        {"name": "RuEn word", "title": "Type one word in English then revert", "shortName": "_WORD"},
+        {"name": "RuEn Store", "title": "Store current layout state", "shortName": "RUEN_STORE"},
+        {"name": "RuEn Revert", "title": "Restore saved layout state", "shortName": "RUEN_REVERT"}
+    ],
+
     "layouts": {
         "LAYOUT": {
             "layout": [
