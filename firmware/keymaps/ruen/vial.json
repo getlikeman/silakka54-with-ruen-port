@@ -29,7 +29,8 @@
         {"name": "RuEn Mod/Tg", "title": "Momentary layout toggle", "shortName": "RUEN_MOD"},
         {"name": "RuEn word", "title": "Type one word in English then revert", "shortName": "RUEN_WORD"},
         {"name": "RuEn Store", "title": "Store current layout state", "shortName": "RUEN_STORE"},
-        {"name": "RuEn Revert", "title": "Restore saved layout state", "shortName": "RUEN_REVERT"}
+        {"name": "RuEn Revert", "title": "Restore saved layout state", "shortName": "RUEN_REVERT"},
+        {"name": "RuEn Toggle (Mac)", "title": "Toggle RU/EN layout on macOS (Ctrl+Space)", "shortName": "RUEN_MAC_TOGGLE"}
     ],
     "matrix": {
         "rows": 10,
