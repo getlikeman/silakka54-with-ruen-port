@@ -59,6 +59,7 @@ enum custom_keycodes {
     RUEN_WORD,
     RUEN_STORE,
     RUEN_REVERT,
+    RUEN_MAC_TOGGLE,
 };
 
 /* Track whether the keyboard believes it is currently in Russian layout.
@@ -108,6 +109,23 @@ static void ruen_send_layout_switch(void) {
     }
 }
 
+static void ruen_send_layout_switch_macos(void) {
+    uint8_t mods = get_mods();
+    uint8_t oneshot_mods = get_oneshot_mods();
+
+    clear_mods();
+    clear_oneshot_mods();
+    send_keyboard_report();
+
+    register_code(KC_LCTL);
+    tap_code_delay(KC_SPACE, 10);
+    unregister_code(KC_LCTL);
+
+    set_mods(mods);
+    set_oneshot_mods(oneshot_mods);
+    send_keyboard_report();
+}
+
 static void ruen_set_layout(bool russian) {
     if (ruen_is_russian == russian) {
         return;
@@ -120,6 +138,11 @@ static void ruen_set_layout(bool russian) {
 /* Toggle the internal and OS layout */
 static void ruen_toggle_layout(void) {
     ruen_set_layout(!ruen_is_russian);
+}
+
+static void ruen_toggle_layout_macos(void) {
+    ruen_send_layout_switch_macos();
+    ruen_is_russian = !ruen_is_russian;
 }
 
 /* Force English */
@@ -300,6 +323,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 return false;
             case RUEN_REVERT:
                 ruen_revert();
+                return false;
+            case RUEN_MAC_TOGGLE:
+                ruen_toggle_layout_macos();
                 return false;
             default:
                 break;
