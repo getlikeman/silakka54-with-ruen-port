@@ -1,0 +1,110 @@
+{
+    "customKeycodes": [
+        {"name": "RuEn Toggle", "title": "Toggle RU/EN layout", "shortName": "RUEN_TOGGLE"},
+        {"name": "RuEn En", "title": "Switch to English layout", "shortName": "RUEN_EN"},
+        {"name": "RuEn Ru", "title": "Switch to Russian layout", "shortName": "RUEN_RU"},
+        {"name": "RuEn .", "title": "Period (.) symbol", "shortName": "RUEN_DOT"},
+        {"name": "RuEn ,", "title": "Comma (,)", "shortName": "RUEN_COMMA"},
+        {"name": "RuEn ;", "title": "Semicolon (;)", "shortName": "RUEN_SCLN"},
+        {"name": "RuEn :", "title": "Colon (:)", "shortName": "RUEN_COLON"},
+        {"name": "RuEn \"", "title": "Double quote (\")", "shortName": "RUEN_DQUOTE"},
+        {"name": "RuEn ?", "title": "Question mark (?)", "shortName": "RUEN_QST"},
+        {"name": "RuEn /", "title": "Forward slash (/)", "shortName": "RUEN_SLASH"},
+        {"name": "RuEn [", "title": "Left bracket ([)", "shortName": "RUEN_LBRC"},
+        {"name": "RuEn ]", "title": "Right bracket (])", "shortName": "RUEN_RBRC"},
+        {"name": "RuEn {", "title": "Left brace ({)", "shortName": "RUEN_LCBR"},
+        {"name": "RuEn }", "title": "Right brace (})", "shortName": "RUEN_RCBR"},
+        {"name": "RuEn <", "title": "Less-than (<)", "shortName": "RUEN_LT"},
+        {"name": "RuEn >", "title": "Greater-than (>)", "shortName": "RUEN_GT"},
+        {"name": "RuEn `", "title": "Backtick (`)", "shortName": "RUEN_GRAVE"},
+        {"name": "RuEn ~", "title": "Tilde (~)", "shortName": "RUEN_TILDE"},
+        {"name": "RuEn @", "title": "At sign (@)", "shortName": "RUEN_AT"},
+        {"name": "RuEn #", "title": "Hash (#)", "shortName": "RUEN_HASH"},
+        {"name": "RuEn $", "title": "Dollar ($)", "shortName": "RUEN_DOLLAR"},
+        {"name": "RuEn ^", "title": "Caret (^)", "shortName": "RUEN_CARET"},
+        {"name": "RuEn &", "title": "Ampersand (&)", "shortName": "RUEN_AMP"},
+        {"name": "RuEn |", "title": "Vertical bar (|)", "shortName": "RUEN_PIPE"},
+        {"name": "RuEn №", "title": "Numero (№)", "shortName": "RUEN_NUM"},
+        {"name": "RuEn Sync", "title": "Synchronise internal layout state", "shortName": "RUEN_SYNC"},
+        {"name": "RuEn Mod/Tg", "title": "Momentary layout toggle", "shortName": "RUEN_MOD"},
+        {"name": "RuEn word", "title": "Type one word in English then revert", "shortName": "RUEN_WORD"},
+        {"name": "RuEn Store", "title": "Store current layout state", "shortName": "RUEN_STORE"},
+        {"name": "RuEn Revert", "title": "Restore saved layout state", "shortName": "RUEN_REVERT"}
+    ],
+    "matrix": {
+        "rows": 10,
+        "cols": 6
+    },
+    "layouts": {
+        "keymap": [
+            [{ "x": 2 }, "0,2", "0,3", { "x": 5.25 }, "5,3", "5,2"],
+            [
+                { "y": -0.75 },
+                "0,0",
+                "0,1",
+                { "x": 2 },
+                "0,4",
+                { "x": 3.25 },
+                "5,4",
+                { "x": 2 },
+                "5,1",
+                "5,0"
+            ],
+            [{ "y": -0.75, "x": 5 }, "0,5", { "x": 1.25 }, "5,5"],
+            [{ "y": -0.5, "x": 2 }, "1,2", "1,3", { "x": 5.25 }, "6,3", "6,2"],
+            [
+                { "y": -0.75 },
+                "1,0",
+                "1,1",
+                { "x": 2 },
+                "1,4",
+                { "x": 3.25 },
+                "6,4",
+                { "x": 2 },
+                "6,1",
+                "6,0"
+            ],
+            [{ "y": -0.75, "x": 5 }, "1,5", { "x": 1.25 }, "6,5"],
+            [{ "y": -0.5, "x": 2 }, "2,2", "2,3", { "x": 5.25 }, "7,3", "7,2"],
+            [
+                { "y": -0.75 },
+                "2,0",
+                "2,1",
+                { "x": 2 },
+                "2,4",
+                { "x": 3.25 },
+                "7,4",
+                { "x": 2 },
+                "7,1",
+                "7,0"
+            ],
+            [{ "y": -0.75, "x": 5 }, "2,5", { "x": 1.25 }, "7,5"],
+            [{ "y": -0.5, "x": 2 }, "3,2", "3,3", { "x": 5.25 }, "8,3", "8,2"],
+            [
+                { "y": -0.75 },
+                "3,0",
+                "3,1",
+                { "x": 2 },
+                "3,4",
+                { "x": 3.25 },
+                "8,4",
+                { "x": 2 },
+                "8,1",
+                "8,0"
+            ],
+            [{ "y": -0.75, "x": 5 }, "3,5", { "x": 1.25 }, "8,5"],
+            [
+                { "y": 0.25, "x": 2.75 },
+                "4,3",
+                "4,4",
+                { "x": 0.25 },
+                "4,5",
+                { "x": 1.25 },
+                "9,5",
+                { "x": 0.25 },
+                "9,4",
+                "9,3"
+            ]
+        ]
+    }
+}
